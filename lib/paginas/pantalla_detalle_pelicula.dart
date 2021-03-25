@@ -6,8 +6,8 @@ import 'package:peliculas/paginas/pantalla_busqueda.dart';
 import 'package:peliculas/servicios/obtener_detalle_pelicula.dart';
 import 'package:peliculas/servicios/obtener_video.dart';
 import 'package:peliculas/widgets/lista_de_peliculas.dart';
+import 'package:peliculas/widgets/mostrar_video.dart';
 import 'package:peliculas/widgets/titulo_principal.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../clases/pelicula.dart';
 
 class PantallaDetallePelicula extends StatelessWidget {
@@ -74,7 +74,7 @@ class verPeliculaDetalle extends StatelessWidget {
             FutureBuilder<VideoPelicula>(
               future: obtenerVideo(peliculaDetalle.id),
               builder: (context, snapshot2) => snapshot2.data != null
-                  ? mostrarVideo(snapshot2.data.key)
+                  ? mostrarVideo(snapshot2.data.key, peliculaDetalle)
                   : Center(child: CircularProgressIndicator()),
             ),
             TituloPrincipal(peliculaDetalle.title),
@@ -120,32 +120,5 @@ class verPeliculaDetalle extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  mostrarVideo(String key) {
-    if (key == '') {
-      return FadeInImage(
-        image: NetworkImage(
-            "https://image.tmdb.org/t/p/w500/${peliculaDetalle.backdropPath}"),
-        placeholder: AssetImage("images/foto_error2.jpg"),
-        imageErrorBuilder: (context, error, stackTrace) {
-          return Image.asset(
-            "images/foto_error2.jpg",
-          );
-        },
-      );
-    } else {
-      YoutubePlayerController _controller = YoutubePlayerController(
-        initialVideoId: key,
-        flags: YoutubePlayerFlags(
-          autoPlay: false,
-        ),
-      );
-
-      return YoutubePlayer(
-        controller: _controller,
-        liveUIColor: Colors.amber,
-      );
-    }
   }
 }
